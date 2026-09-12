@@ -1,0 +1,63 @@
+blueprint:
+  name: AWTRIX NG clock - weather to MQTT
+  description: >-
+    Sends outdoor temperature and weather condition to the ClockTemp script on
+    AWTRIX NG. Publishes retained, so the clock has values straight after a reboot.
+    Runs when the weather entity changes and when Home Assistant starts.
+  domain: automation
+  source_url: https://github.com/TSA3000/awtrix-ng-clock/blob/main/blueprints/weather_to_mqtt.yaml
+  homeassistant:
+    min_version: "2024.10.0"
+  input:
+    weather_entity:
+      name: Weather entity
+      description: Where the temperature and condition come from.
+      selector:
+        entity:
+          domain: weather
+    settings:
+      name: Settings
+      icon: mdi:cog
+      collapsed: true
+      input:
+        temp_topic:
+          name: Temperature topic
+          description: Must match "Temperature topic" in the script settings.
+          default: awtrix/outdoor/temp
+          selector:
+            text: {}
+        cond_topic:
+          name: Condition topic
+          description: Must match "Condition topic" in the script settings.
+          default: awtrix/outdoor/cond
+          selector:
+            text: {}
+
+mode: queued
+max: 10
+max_exceeded: silent
+
+variables:
+  weather_entity: !input weather_entity
+  temp_topic: !input temp_topic
+  cond_topic: !input cond_topic
+
+triggers:
+  - trigger: state
+    entity_id: !input weather_entity
+  - trigger: homeassistant
+    event: start
+
+actions:
+  - action: mqtt.publish
+    data:
+      topic: "{{ temp_topic }}"
+      qos: 0
+      retain: true
+      payload: "{% set t = state_attr(weather_entity, 'temperature') %}{{ (t | round(0) | int) if t is not none else '--' }}"
+  - action: mqtt.publish
+    data:
+      topic: "{{ cond_topic }}"
+      qos: 0
+      retain: true
+      payload: "{{ states(weather_entity) }}"

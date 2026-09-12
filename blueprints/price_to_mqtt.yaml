@@ -1,0 +1,80 @@
+blueprint:
+  name: AWTRIX NG clock - electricity price to MQTT
+  description: >-
+    Sends the current electricity price to the price bar in the ClockTemp script on
+    AWTRIX NG. The script expects öre/kWh, so use the multiplier if your sensor
+    reports SEK/kWh. Publishes retained, and waits until a new price has held for a
+    moment so short sensor glitches don't flash on the bar.
+  domain: automation
+  source_url: https://github.com/TSA3000/awtrix-ng-clock/blob/main/blueprints/price_to_mqtt.yaml
+  homeassistant:
+    min_version: "2024.10.0"
+  input:
+    price_sensor:
+      name: Price sensor
+      description: Current electricity price.
+      selector:
+        entity:
+          domain: sensor
+    settings:
+      name: Settings
+      icon: mdi:cog
+      collapsed: true
+      input:
+        multiplier:
+          name: Multiply price by
+          description: 1 if the sensor is in öre/kWh, 100 if it is in SEK/kWh.
+          default: 1
+          selector:
+            number:
+              min: 0.001
+              max: 1000
+              step: 0.001
+              mode: box
+        hold_time:
+          name: Hold time
+          description: How long a new price must stay before it is sent. 0 sends at once.
+          default:
+            seconds: 30
+          selector:
+            duration: {}
+        price_topic:
+          name: Price topic
+          description: Must match "Price topic" in the script settings.
+          default: awtrix/elpris
+          selector:
+            text: {}
+
+mode: queued
+max: 10
+max_exceeded: silent
+
+variables:
+  price_sensor: !input price_sensor
+  multiplier: !input multiplier
+  price_topic: !input price_topic
+
+triggers:
+  - trigger: state
+    entity_id: !input price_sensor
+    to: ~
+    for: !input hold_time
+  - trigger: homeassistant
+    event: start
+
+conditions:
+  - condition: not
+    conditions:
+      - condition: state
+        entity_id: !input price_sensor
+        state:
+          - unknown
+          - unavailable
+
+actions:
+  - action: mqtt.publish
+    data:
+      topic: "{{ price_topic }}"
+      qos: 0
+      retain: true
+      payload: "{{ (states(price_sensor) | float(0) * multiplier) | round(2) }}"

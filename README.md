@@ -89,7 +89,27 @@ Weather states it knows: sunny, clear-night, cloudy, partlycloudy, rainy, pourin
 
 ## Feeding the data
 
-### Home Assistant
+Pick one way per feed. Blueprints are the easiest.
+
+### Blueprints
+
+Import them, then create an automation from each one and pick your entities.
+
+Weather:
+
+[![Import weather blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2FTSA3000%2Fawtrix-ng-clock%2Fblob%2Fmain%2Fblueprints%2Fweather_to_mqtt.yaml)
+
+Electricity price:
+
+[![Import price blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2FTSA3000%2Fawtrix-ng-clock%2Fblob%2Fmain%2Fblueprints%2Fprice_to_mqtt.yaml)
+
+The price blueprint has a few extra settings:
+
+- **Multiply price by** - leave at 1 for öre/kWh, set 100 if your sensor is in SEK/kWh
+- **Hold time** - a new price has to stay this long before it is sent (30 seconds by default), so short sensor glitches don't flash on the bar
+- Topic names, if you changed them in the script
+
+### Home Assistant automations
 
 - `homeassistant/weather_to_mqtt.yaml` sends temperature and weather. Change `weather.home` to your weather entity.
 - `homeassistant/price_to_mqtt.yaml` sends the price, if you'd rather not use Node-RED.
