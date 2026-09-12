@@ -1,0 +1,21 @@
+# Sends the current electricity price (öre/kWh) to the clock.
+# Use this or the Node-RED flow, not both.
+# Change the sensor to your own price sensor.
+alias: AWTRIX electricity price to MQTT
+description: Feeds the price bar in the ClockTemp script on AWTRIX NG
+triggers:
+  - trigger: state
+    entity_id: sensor.electricity_price_se3_current
+  - trigger: homeassistant
+    event: start
+conditions:
+  - condition: template
+    value_template: "{{ states('sensor.electricity_price_se3_current') | is_number }}"
+actions:
+  - action: mqtt.publish
+    data:
+      topic: awtrix/elpris
+      qos: 0
+      retain: true
+      payload: "{{ states('sensor.electricity_price_se3_current') }}"
+mode: single

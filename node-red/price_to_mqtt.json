@@ -1,0 +1,58 @@
+[
+  {
+    "id": "a1c3e5f7b9d10001",
+    "type": "server-state-changed",
+    "name": "Price changed",
+    "server": "",
+    "version": 6,
+    "outputs": 1,
+    "exposeAsEntityConfig": "",
+    "entities": {
+      "entity": ["sensor.electricity_price_se3_current"],
+      "substring": [],
+      "regex": []
+    },
+    "outputInitially": true,
+    "stateType": "str",
+    "ifState": "",
+    "ifStateType": "str",
+    "ifStateOperator": "is",
+    "outputOnlyOnStateChange": true,
+    "for": "0",
+    "forType": "num",
+    "forUnits": "minutes",
+    "ignorePrevStateNull": false,
+    "ignorePrevStateUnknown": false,
+    "ignorePrevStateUnavailable": false,
+    "ignoreCurrentStateUnknown": true,
+    "ignoreCurrentStateUnavailable": true,
+    "outputProperties": [
+      {
+        "property": "payload",
+        "propertyType": "msg",
+        "value": "",
+        "valueType": "entityState"
+      }
+    ],
+    "x": 160,
+    "y": 80,
+    "wires": [["a1c3e5f7b9d10002"]]
+  },
+  {
+    "id": "a1c3e5f7b9d10002",
+    "type": "mqtt out",
+    "name": "AWTRIX price bar",
+    "topic": "awtrix/elpris",
+    "qos": "0",
+    "retain": "true",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "",
+    "x": 400,
+    "y": 80,
+    "wires": []
+  }
+]

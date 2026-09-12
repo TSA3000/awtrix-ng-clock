@@ -1,0 +1,25 @@
+# Sends outdoor temperature and weather condition to the clock.
+# Change weather.home to your own weather entity.
+# Retained, so the display has values right after a reboot.
+alias: AWTRIX outdoor temperature and condition to MQTT
+description: Feeds the ClockTemp script on AWTRIX NG
+triggers:
+  - trigger: state
+    entity_id: weather.home
+  - trigger: homeassistant
+    event: start
+conditions: []
+actions:
+  - action: mqtt.publish
+    data:
+      topic: awtrix/outdoor/temp
+      qos: 0
+      retain: true
+      payload: "{% set t = state_attr('weather.home', 'temperature') %}{{ (t | round(0) | int) if t is not none else '--' }}"
+  - action: mqtt.publish
+    data:
+      topic: awtrix/outdoor/cond
+      qos: 0
+      retain: true
+      payload: "{{ states('weather.home') }}"
+mode: single
