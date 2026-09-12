@@ -5,9 +5,9 @@
 # @config  price_topic text  "Price topic (öre)"  default="awtrix/elpris"
 # @config  time_col    color "Clock colour"       default=#FFFFFF
 # @config  temp_col    color "Temp colour"        default=#C8C8C8
-# @config  low_col     color "Price 0-100 colour"   default=#00C800
-# @config  mid_col     color "Price 100-200 colour" default=#FF8C00
-# @config  high_col    color "Price 200+ colour"    default=#FF0000
+# @config  low_col     color "Price 0-100 colour"   default=#3B7A57
+# @config  mid_col     color "Price 100-200 colour" default=#F77530
+# @config  high_col    color "Price 200+ colour"    default=#FF6347
 
 class ClockTemp
   var time_str, temp_str, icon_id, last_min, time_col, temp_col, codes
