@@ -35,6 +35,26 @@ Some examples:
 
 Colours can be changed in the script settings.
 
+![price bar](images/price-bar.png)
+
+## Examples
+
+The photo at the top is a dump of the real panel. These are rendered from the same drawing code and the AWTRIX NG font, so they match what the clock shows pixel for pixel.
+
+| | |
+|---|---|
+| ![cheap](images/cheap.png) | 18 öre, sunny |
+| ![full green](images/full-green.png) | 95 öre, thunder |
+| ![medium](images/medium.png) | 162 öre, rain |
+| ![expensive](images/expensive.png) | 287 öre, snow |
+| ![spike](images/spike.png) | 640 öre, cloudy |
+
+## Weather icons
+
+![icons](images/icons.png)
+
+From left: sunny, clear-night, cloudy, partlycloudy, rainy, pouring, snowy, snowy-rainy (also hail), fog, lightning (also lightning-rainy and exceptional), windy (also windy-variant), and the dot for anything else.
+
 ## What you need
 
 - AWTRIX NG with scripting enabled (I run 1.1.0)
@@ -85,5 +105,6 @@ If the MQTT node sits on "connecting", check the broker login. The Mosquitto add
 ## Notes
 
 - The price sensor I use updates a couple of minutes after each quarter hour, so the bar can be slightly behind.
+- At -10 degrees and colder the temperature is three characters wide and sits right up against the clock with no gap, so `08:00` and `-12` read as `08:00-12`.
 - The text uses rows 1-5 and the icon rows 2-6. If you want them lined up, subtract 1 from every y in `draw_icon()`.
 - Everything is worked out when a message arrives. `draw()` runs about 40 times a second and doesn't allocate anything.
