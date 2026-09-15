@@ -6,6 +6,8 @@ description: Feeds the ClockTemp script on AWTRIX NG
 triggers:
   - trigger: state
     entity_id: weather.home
+  - trigger: state
+    entity_id: sun.sun
   - trigger: homeassistant
     event: start
 conditions: []
@@ -21,5 +23,11 @@ actions:
       topic: awtrix/outdoor/cond
       qos: 0
       retain: true
-      payload: "{{ states('weather.home') }}"
+      payload: >-
+        {%- set c = states('weather.home') -%}
+        {%- if is_state('sun.sun', 'below_horizon') -%}
+          {%- if c == 'partlycloudy' -%}partlycloudy-night
+          {%- elif c == 'sunny' -%}clear-night
+          {%- else -%}{{ c }}{%- endif -%}
+        {%- else -%}{{ c }}{%- endif -%}
 mode: single

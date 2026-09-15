@@ -53,7 +53,9 @@ The photo at the top is a dump of the real panel. These are rendered from the sa
 
 ![icons](images/icons.png)
 
-From left: sunny, clear-night, cloudy, partlycloudy, rainy, pouring, snowy, snowy-rainy (also hail), fog, lightning (also lightning-rainy and exceptional), windy (also windy-variant), and the dot for anything else.
+From left: sunny, clear-night, cloudy, partlycloudy, partlycloudy-night, rainy, pouring, snowy, snowy-rainy (also hail), fog, lightning (also lightning-rainy and exceptional), windy (also windy-variant), and the dot for anything else.
+
+Home Assistant only has a night variant for clear skies, so a partly cloudy night would show a sun. The weather blueprint fixes this: when the sun is below the horizon it publishes `partlycloudy-night` instead, and the clock draws a moon behind the cloud. It also turns `sunny` into `clear-night`, since some providers (SMHI among them) report sunny around the clock and never use clear-night themselves. The swap happens at sunset and sunrise, not just when the weather changes.
 
 ## What you need
 
@@ -85,7 +87,7 @@ Then set up the feeds below.
 
 Publish them retained so the clock has values straight after a reboot. The topic names can be changed in the script settings.
 
-Weather states it knows: sunny, clear-night, cloudy, partlycloudy, rainy, pouring, snowy, snowy-rainy, hail, fog, lightning, lightning-rainy, exceptional, windy, windy-variant. Anything else shows a grey dot.
+Weather states it knows: sunny, clear-night, cloudy, partlycloudy, partlycloudy-night, rainy, pouring, snowy, snowy-rainy, hail, fog, lightning, lightning-rainy, exceptional, windy, windy-variant. Anything else shows a grey dot. `partlycloudy-night` is not a real Home Assistant state - the blueprint and the automation create it from `partlycloudy` when `sun.sun` is below the horizon.
 
 ## Feeding the data
 

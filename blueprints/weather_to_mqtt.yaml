@@ -45,6 +45,8 @@ variables:
 triggers:
   - trigger: state
     entity_id: !input weather_entity
+  - trigger: state
+    entity_id: sun.sun
   - trigger: homeassistant
     event: start
 
@@ -60,4 +62,10 @@ actions:
       topic: "{{ cond_topic }}"
       qos: 0
       retain: true
-      payload: "{{ states(weather_entity) }}"
+      payload: >-
+        {%- set c = states(weather_entity) -%}
+        {%- if is_state('sun.sun', 'below_horizon') -%}
+          {%- if c == 'partlycloudy' -%}partlycloudy-night
+          {%- elif c == 'sunny' -%}clear-night
+          {%- else -%}{{ c }}{%- endif -%}
+        {%- else -%}{{ c }}{%- endif -%}

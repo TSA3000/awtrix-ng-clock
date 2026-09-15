@@ -1,4 +1,5 @@
 # @name    ClockTemp
+# @version 2.3
 # @desc    Left-aligned clock with outdoor temp, a 3px weather icon and an electricity price bar
 # @config  temp_topic  text  "Temperature topic"  default="awtrix/outdoor/temp"
 # @config  cond_topic  text  "Condition topic"    default="awtrix/outdoor/cond"
@@ -31,7 +32,7 @@ class ClockTemp
       "sunny": 1, "clear-night": 2, "cloudy": 3, "partlycloudy": 4,
       "rainy": 5, "pouring": 6, "snowy": 7, "snowy-rainy": 8, "hail": 8,
       "fog": 9, "lightning": 10, "lightning-rainy": 10, "exceptional": 10,
-      "windy": 11, "windy-variant": 11 }
+      "windy": 11, "windy-variant": 11, "partlycloudy-night": 12 }
 
     mqtt.subscribe(store.get("temp_topic"), def (t, p) self.on_temp(p) end)
     mqtt.subscribe(store.get("cond_topic"), def (t, p) self.on_cond(p) end)
@@ -148,6 +149,10 @@ class ClockTemp
     elif self.icon_id == 11
       line(29, 3, 31, 3, 0x8F9BA8)
       line(30, 5, 31, 5, 0x8F9BA8)
+    elif self.icon_id == 12
+      rect_fill(29, 4, 3, 2, 0x8F9BA8)
+      pixel(30, 2, 0x9FB8FF) pixel(31, 3, 0x9FB8FF)
+      pixel(31, 4, 0x9FB8FF) pixel(30, 5, 0x9FB8FF)
     else
       pixel(30, 4, 0x8F9BA8)
     end

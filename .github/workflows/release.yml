@@ -24,7 +24,7 @@ jobs:
         run: |
           name="awtrix-ng-clock-${GITHUB_REF_NAME}"
           mkdir -p "dist/$name"
-          cp -r clocktemp.be README.md LICENSE homeassistant node-red images "dist/$name/"
+          cp -r clocktemp.be README.md LICENSE blueprints homeassistant node-red images "dist/$name/"
           (cd dist && zip -r "$name.zip" "$name")
 
       - name: Write release notes
